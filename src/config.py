@@ -1,4 +1,4 @@
-ARQUIVO_CSV = r"C:\Users\PICHAU\PycharmProjects\Métodos de Clusterização\Data\dispositivos_30x30_uniforme.csv"
+ARQUIVO_CSV = "data/dispositivos_30x30_uniforme.csv"
 
 N_CLUSTERS = 4
 
