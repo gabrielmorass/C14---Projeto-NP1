@@ -1,5 +1,5 @@
 from sklearn.cluster import KMeans
-from config import RANDOM_STATE, N_INIT
+from src.config import RANDOM_STATE, N_INIT
 
 
 def aplicar_kmeans(dispositivos, n_clusters=4):
