@@ -3,4 +3,46 @@ name: CD
 on:
   workflow_run:
     workflows: ["CI"]
-    types: [completed]
+    types:
+      - completed
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    name: Deploy dos artifacts
+    runs-on: ubuntu-latest
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Preparar pacote para release
+        run: |
+          mkdir -p dist
+          zip -r dist/projeto-np1.zip . \
+            -x "*.git*" \
+            -x "*__pycache__*" \
+            -x "*.pytest_cache*" \
+            -x "*.venv*" \
+            -x "*dist/*" \
+            -x "*test-results/*"
+
+      - name: Criar tag da release
+        id: tag
+        run: echo "tag=release-${{ github.run_number }}" >> $GITHUB_OUTPUT
+
+      - name: Criar release e publicar artefato
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.tag.outputs.tag }}" \
+            dist/projeto-np1.zip \
+            --title "Release ${{ steps.tag.outputs.tag }}" \
+            --notes "Deploy automático após sucesso do workflow CI."
