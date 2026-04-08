@@ -101,3 +101,30 @@ def test_valores_nulos(tmp_path):
 
     with pytest.raises(DataValidationError):
         carregar_dispositivos(arquivo)
+
+def test_arquivo_nao_csv(tmp_path):
+    arquivo = tmp_path / "dados.txt"
+    arquivo.write_text("conteudo qualquer", encoding="utf-8")
+
+    with pytest.raises(DataFileError):
+        carregar_dispositivos(arquivo)
+
+
+def test_dispositivos_retorna_apenas_colunas_x_y(tmp_path):
+    dados = pd.DataFrame({
+        "Set": [1, 1],
+        "Subset": [1, 1],
+        "Device_ID": [0, 1],
+        "X": [10, 20],
+        "Y": [30, 40]
+    })
+
+    arquivo = tmp_path / "dados.csv"
+    dados.to_csv(arquivo, index=False)
+
+    df, dispositivos = carregar_dispositivos(arquivo)
+
+    assert list(df.columns) == ["Set", "Subset", "Device_ID", "X", "Y"]
+    assert dispositivos.shape == (2, 2)
+    assert dispositivos[0][0] == 10
+    assert dispositivos[0][1] == 30

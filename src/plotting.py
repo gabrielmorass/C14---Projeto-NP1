@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from config import X_LIM, Y_LIM
+from src.config import X_LIM, Y_LIM
 
 
 def plotar_clusters(dispositivos, labels, centros, n_clusters, titulo="K-Means"):

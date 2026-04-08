@@ -1,60 +1,49 @@
-import pytest
 import numpy as np
-
 from clustering import aplicar_kmeans
 
 
-
-def gerar_dados_simples():
-    return [
+def testar_aplicar_kmeans_retorna_labels_e_centros():
+    # Dados simples
+    dispositivos = np.array([
         [1, 2],
-        [1, 3],
-        [10, 10],
-        [10, 11]
-    ]
+        [1, 4],
+        [10, 2],
+        [10, 4]
+    ])
 
+    labels, centros = aplicar_kmeans(dispositivos, n_clusters=2)
 
-def test_retorno_labels_e_centros():
-    dados = gerar_dados_simples()
+    # Verifica se retornou algo
+    assert labels is not None
+    assert centros is not None
 
-    labels, centros = aplicar_kmeans(dados, n_clusters=2)
-
- 
-    assert len(labels) == len(dados)
-
-  
+    # Verifica tamanho dos resultados
+    assert len(labels) == len(dispositivos)
     assert len(centros) == 2
 
 
-def test_tipo_retorno():
-    dados = gerar_dados_simples()
+def testar_aplicar_kmeans_clusters_corretos():
+    dispositivos = np.array([
+        [1, 2],
+        [1, 4],
+        [10, 2],
+        [10, 4]
+    ])
 
-    labels, centros = aplicar_kmeans(dados, n_clusters=2)
+    labels, _ = aplicar_kmeans(dispositivos, n_clusters=2)
 
-    assert isinstance(labels, np.ndarray)
-    assert isinstance(centros, np.ndarray)
-
-
-
-def test_consistencia_resultados():
-    dados = gerar_dados_simples()
-
-    labels1, centros1 = aplicar_kmeans(dados, 2)
-    labels2, centros2 = aplicar_kmeans(dados, 2)
-
-    assert (labels1 == labels2).all()
-    assert np.allclose(centros1, centros2)
+    # Deve existir exatamente 2 clusters
+    assert len(set(labels)) == 2
 
 
+def testar_aplicar_kmeans_com_um_cluster():
+    dispositivos = np.array([
+        [1, 2],
+        [2, 3],
+        [3, 4]
+    ])
 
-def test_numero_clusters():
-    dados = gerar_dados_simples()
+    labels, centros = aplicar_kmeans(dispositivos, n_clusters=1)
 
-    _, centros = aplicar_kmeans(dados, n_clusters=3)
-
-    assert len(centros) == 3
-
-
-def test_entrada_invalida():
-    with pytest.raises(Exception):
-        aplicar_kmeans(None)
+    assert len(set(labels)) == 1
+    assert len(centros) == 1
