@@ -30,7 +30,7 @@ jobs:
 
       - name: Gerar resultados
         run: |
-          python src/main.py
+          python -m src.main
 
       - name: Verificar arquivos gerados
         run: |
