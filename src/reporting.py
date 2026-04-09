@@ -1,8 +1,16 @@
-def imprimir_dispositivos_por_cluster(df, labels, n_clusters):
-    df_resultado = df.copy()
-    df_resultado["Cluster"] = labels
+import os
 
-    for idx in range(n_clusters):
+def gerar_relatorio_clusters(df, labels):
+    df_resultado = df.copy()
+    df_resultado["Cluster"] = labels + 1
+    return df_resultado
+
+def salvar_relatorio_csv(df_resultado, caminho_saida):
+    os.makedirs(os.path.dirname(caminho_saida), exist_ok=True)
+    df_resultado.to_csv(caminho_saida, index=False)
+
+def imprimir_dispositivos_por_cluster(df_resultado, n_clusters):
+    for idx in range(1, n_clusters + 1):
         cluster_df = df_resultado[df_resultado["Cluster"] == idx]
-        print(f"\nCluster {idx + 1}:")
+        print(f"\nCluster {idx}:")
         print(cluster_df[["Device_ID", "X", "Y"]].to_string(index=False))

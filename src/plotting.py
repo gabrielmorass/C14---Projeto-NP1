@@ -1,8 +1,8 @@
+import os
 import matplotlib.pyplot as plt
-from src.config import X_LIM, Y_LIM
+from config import X_LIM, Y_LIM
 
-
-def plotar_clusters(dispositivos, labels, centros, n_clusters, titulo="K-Means"):
+def plotar_clusters(dispositivos, labels, centros, n_clusters, titulo="K-Means", salvar_em=None):
     plt.figure(figsize=(8, 8))
 
     for idx in range(n_clusters):
@@ -29,4 +29,10 @@ def plotar_clusters(dispositivos, labels, centros, n_clusters, titulo="K-Means")
     plt.legend()
     plt.xlim(X_LIM)
     plt.ylim(Y_LIM)
-    plt.show()
+
+    if salvar_em:
+        os.makedirs(os.path.dirname(salvar_em), exist_ok=True)
+        plt.savefig(salvar_em, bbox_inches="tight")
+        plt.close()
+    else:
+        plt.show()

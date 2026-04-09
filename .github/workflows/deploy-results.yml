@@ -1,0 +1,119 @@
+name: Deploy Results
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-results:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Gerar resultados
+        run: |
+          python src/main.py
+
+      - name: Verificar arquivos gerados
+        run: |
+          ls -R
+          test -f results/clusters.png
+          test -f results/cluster_report.csv
+
+      - name: Montar site
+        run: |
+          mkdir -p site
+          cp results/clusters.png site/clusters.png
+          cp results/cluster_report.csv site/cluster_report.csv
+
+          cat > site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="pt-BR">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Resultados do Projeto NP1</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                margin: 40px;
+                line-height: 1.6;
+              }
+              img {
+                max-width: 100%;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+              }
+              .container {
+                max-width: 1000px;
+                margin: auto;
+              }
+              .card {
+                margin-bottom: 30px;
+                padding: 20px;
+                border: 1px solid #ddd;
+                border-radius: 10px;
+              }
+              a {
+                text-decoration: none;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h1>Resultados do Projeto NP1</h1>
+              <p>Esta página foi gerada automaticamente pelo pipeline de deploy.</p>
+
+              <div class="card">
+                <h2>Visualização da Clusterização</h2>
+                <img src="clusters.png" alt="Gráfico de clusters">
+              </div>
+
+              <div class="card">
+                <h2>Arquivos gerados</h2>
+                <ul>
+                  <li><a href="cluster_report.csv" target="_blank">Baixar relatório CSV</a></li>
+                </ul>
+              </div>
+            </div>
+          </body>
+          </html>
+          EOF
+
+      - name: Configurar Pages
+        uses: actions/configure-pages@v5
+
+      - name: Enviar artefato do site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build-results
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Publicar no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
