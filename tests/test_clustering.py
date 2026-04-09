@@ -1,49 +1,59 @@
 import numpy as np
-from clustering import aplicar_kmeans
+
+from src.clustering import aplicar_kmeans
 
 
-def testar_aplicar_kmeans_retorna_labels_e_centros():
-    # Dados simples
+def test_aplicar_kmeans_retorna_labels_e_centros():
     dispositivos = np.array([
+        [1, 1],
         [1, 2],
-        [1, 4],
-        [10, 2],
-        [10, 4]
+        [9, 9],
+        [9, 8],
     ])
 
     labels, centros = aplicar_kmeans(dispositivos, n_clusters=2)
 
-    # Verifica se retornou algo
-    assert labels is not None
-    assert centros is not None
-
-    # Verifica tamanho dos resultados
     assert len(labels) == len(dispositivos)
-    assert len(centros) == 2
+    assert centros.shape == (2, 2)
 
 
-def testar_aplicar_kmeans_clusters_corretos():
+def test_aplicar_kmeans_gera_quantidade_correta_de_clusters():
     dispositivos = np.array([
+        [1, 1],
         [1, 2],
-        [1, 4],
-        [10, 2],
-        [10, 4]
+        [9, 9],
+        [9, 8],
+        [5, 5],
+        [5, 6],
     ])
 
-    labels, _ = aplicar_kmeans(dispositivos, n_clusters=2)
+    labels, centros = aplicar_kmeans(dispositivos, n_clusters=3)
 
-    # Deve existir exatamente 2 clusters
-    assert len(set(labels)) == 2
+    assert len(set(labels)) == 3
+    assert len(centros) == 3
 
 
-def testar_aplicar_kmeans_com_um_cluster():
+def test_aplicar_kmeans_com_mesmo_random_state_e_deterministico():
     dispositivos = np.array([
+        [1, 1],
         [1, 2],
-        [2, 3],
-        [3, 4]
+        [9, 9],
+        [9, 8],
     ])
 
-    labels, centros = aplicar_kmeans(dispositivos, n_clusters=1)
+    labels1, centros1 = aplicar_kmeans(dispositivos, n_clusters=2)
+    labels2, centros2 = aplicar_kmeans(dispositivos, n_clusters=2)
 
-    assert len(set(labels)) == 1
-    assert len(centros) == 1
+    assert np.array_equal(labels1, labels2)
+    assert np.allclose(centros1, centros2)
+
+
+def test_aplicar_kmeans_quando_clusters_maiores_que_amostras_gera_erro():
+    dispositivos = np.array([
+        [1, 1],
+        [2, 2],
+    ])
+
+    import pytest
+    with pytest.raises(ValueError):
+        aplicar_kmeans(dispositivos, n_clusters=3)
