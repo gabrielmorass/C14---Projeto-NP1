@@ -4,6 +4,13 @@
 [![Deploy Results](https://github.com/gabrielmorass/C14---Projeto-NP1/actions/workflows/deploy-results.yml/badge.svg)](https://github.com/gabrielmorass/C14---Projeto-NP1/actions/workflows/deploy-results.yml)
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Online-success)](https://gabrielmorass.github.io/C14---Projeto-NP1/)
 
+## Autores
+Gabriel Cerantola Rigatto Morás - 359 - GES
+
+Tiago Braga Bassotto de Andrade - GEC - 2104
+
+Samile Costa Barbosa - GES - 370
+
 ## Descrição
 
 Este projeto tem como objetivo determinar o posicionamento ideal de **power beacons** com base na distribuição espacial de dispositivos, utilizando o algoritmo de clusterização **K-means**.
