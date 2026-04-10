@@ -201,3 +201,39 @@ Os principais artifacts gerados pelo projeto são:
 - `results/cluster_report.csv`
 
 Esses arquivos também são utilizados no processo de deploy automático.
+
+## Prompts utilizados no projeto
+
+Durante o desenvolvimento do projeto, foram utilizados prompts para apoiar etapas como análise de requisitos, identificação de pendências e correção de testes unitários, ajuste do pipeline de CI/CD, organização do fluxo com pull requests e implementação do deploy automático dos resultados gerados. Entre os prompts mais relevantes, destacam-se as correções de falhas no GitHub Actions, criação de descrições de PR, reversão de merges problemáticos e detalhamento da publicação automática dos resultados gerados.
+
+### 1. Desenvolvimento e correção dos testes
+**Prompts:**
+- "primeiro vamos completar os testes"
+- "passou nos 20 testes"
+- "mas o tratamento de erro nao fica no test?"
+
+**Objetivo:**  
+Criar, revisar e validar os testes unitários do projeto.
+
+### 2. Correção do CI/CD
+**Prompts:**
+- "vamos corrigir o CI e CD primeiro"
+
+**Objetivo:**  
+Entender por que os workflows do GitHub Actions estavam falhando e corrigir a pipeline.
+
+### 3. Deploy dos resultados
+**Prompts:**
+- "eu quero fazer um deploy apenas dos resultados"
+- "o passo 2 de publicar os resultados, detalhe mais"
+
+**Objetivo:**  
+Implementar uma etapa de deploy focada apenas nos resultados gerados pelo projeto.
+
+### 4. Correção de imports e compatibilidade com testes
+**Prompts:**
+- "confira se esses são todos os arquivos alterados"
+- "entao mantenho os results fora do commit?"
+
+**Objetivo:**  
+Revisar os arquivos alterados e garantir que apenas o código necessário entrasse no commit.
